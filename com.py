@@ -67,7 +67,7 @@ class MINI_CoM:
                 transform = self.tfBuffer.lookup_transform(self.base_link_frame, link, rospy.Time())
 
                 
-                # Get CoM position in link frame
+                # CoM position in link frame
                 link_com = geometry_msgs.msg.PointStamped()
                 link_com.header.frame_id = link
                 link_com.header.stamp = rospy.Time(0)
@@ -75,7 +75,7 @@ class MINI_CoM:
                 link_com.point.y = self.link_info[link]['origin']['xyz'][1]
                 link_com.point.z = self.link_info[link]['origin']['xyz'][2]
 
-                # Transform CoM to base frame
+                # CoM to base frame transform
                 transformed_com = tf_geo.do_transform_point(link_com, transform)
 
                 # Store transformed CoM position
@@ -105,18 +105,14 @@ class MINI_CoM:
             com_x += data['x'] * mass
             com_y += data['y'] * mass
             com_z += data['z'] * mass
-
-        # Compute weighted CoM
-        self.com_x = com_x / self.total_mass
-        self.com_y = com_y / self.total_mass
-        self.com_z = com_z / self.total_mass        
+       
         """
             TODO: Calculate whole body CoM 
             """
-            #self.com_x = 0
-            #self.com_y = 0
-            #self.com_z = 0
-            # ...
+
+        self.com_x = com_x / self.total_mass
+        self.com_y = com_y / self.total_mass
+        self.com_z = com_z / self.total_mass 
 
     def visualize_CoM(self):
         self.marker.pose.position.x = self.com_x
